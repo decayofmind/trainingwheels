@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: trainingwheels
+  labels:
+    name: trainingwheels
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: trainingwheels
+    spec:
+      containers:
+        - name: trainingwheels
+          image: decayofmind/trainingwheels:latest
+          resources:
+            limits:
+              memory: "200Mi"
+          ports:
+            - containerPort: 3000
