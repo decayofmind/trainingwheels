@@ -4,13 +4,14 @@ services:
   www:
     build: www
     ports:
-      - 8000:5000
+      - 5000:5000
     user: nobody
     environment:
       DEBUG: 1
-    command: python counter.py
     volumes:
-      - ./www:/src
+      - ./src:/app
+    links:
+      - redis:redis
 
   redis:
     image: redis
