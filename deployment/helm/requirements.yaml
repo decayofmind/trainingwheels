@@ -1,0 +1,4 @@
+---
+dependencies:
+- name: redis-cache
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com/

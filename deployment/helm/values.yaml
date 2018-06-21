@@ -1,0 +1,17 @@
+---
+replicaCount: 3
+
+image:
+  repository: decayofmind/trainingwheels
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  internalPort: 5000
+  externalPort: 80
+
+#resources:
+  #limits:
+    #memory: 128Mi
+  #requests:
+    #memory: 128Mi

@@ -1,17 +1,17 @@
 FROM python:3.6-alpine
 
-COPY requirements.txt /app/
+COPY ./src/requirements.txt /app/
 
 RUN apk add --no-cache --virtual .build-deps \
               gcc libc-dev linux-headers && \
     pip install -r /app/requirements.txt && \
     apk del .build-deps
 
-RUN adduser -S uwsgi
+#RUN adduser -S uwsgi
 
-USER uwsgi
+#USER uwsgi
 
-COPY . /app
+COPY ./src /app
 
 WORKDIR /app
 

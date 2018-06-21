@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 
 from flask import Flask, Response, send_from_directory, render_template
+from healthcheck import HealthCheck
+from prometheus_flask_exporter import PrometheusMetrics
+from prometheus_client import multiprocess
+from prometheus_client.core import CollectorRegistry
+
 import os
 import redis
 import socket
-import prometheus_client
 
-from metrics import setup_metrics
-
-
-CONTENT_TYPE_LATEST = str('text/plain; version=0.0.4; charset=utf-8')
 
 app = Flask(__name__)
-setup_metrics(app)
+
+registry = CollectorRegistry()
+multiprocess.MultiProcessCollector(registry, path='/tmp')
+
+metrics = PrometheusMetrics(app, registry=registry)
+healthcheck = HealthCheck(app, "/health")
 
 hostname = socket.gethostname()
 redis = redis.Redis(os.getenv("REDIS_HOST", "redis"))
@@ -45,13 +50,7 @@ def assets(path):
     return send_from_directory("assets", path)
 
 
-@app.route('/metrics')
-def metrics():
-    return Response(prometheus_client.generate_latest(),
-                    mimetype=CONTENT_TYPE_LATEST)
-
-
 if __name__ == "__main__":
-    app.run()
+    app.run(port=os.getenv("APP_PORT", 5000))
 
 #  vim: set et fenc=utf-8 ft=python sts=4 sw=4 ts=4 tw=79 :
