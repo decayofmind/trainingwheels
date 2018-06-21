@@ -1,6 +1,10 @@
 ---
 replicaCount: 3
 
+revisionHistoryLimit: 3
+maxUnavailable: 1
+maxSurge: 2
+
 image:
   repository: decayofmind/trainingwheels
   tag: latest
@@ -10,8 +14,15 @@ service:
   internalPort: 5000
   externalPort: 80
 
+monitoring:
+  serviceMonitorName:
+
 #resources:
   #limits:
     #memory: 128Mi
   #requests:
     #memory: 128Mi
+
+redis-cache:
+  antiAffinity: "soft"
+  nameOverride:

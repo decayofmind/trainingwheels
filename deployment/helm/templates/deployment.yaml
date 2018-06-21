@@ -40,18 +40,19 @@ spec:
               containerPort: {{ .Values.service.internalPort }}
           env:
             - name: REDIS_HOST
-              value: {{ template "trainingwheels.redis-cache.fullname" }}
+              value: {{ template "trainingwheels.redis.fullname" . }}
             - name: APP_PORT
-              value: {{ .Values.service.internalPort }}
+              value: {{ .Values.service.internalPort | quote }}
           livenessProbe:
             httpGet:
-              path: /
-              port: {{ .Values.service.internalPort }}
+              path: /health
+              #port: {{ .Values.service.internalPort }}
+              port: web
             initialDelaySeconds: 10
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /
+              path: /health
               port: {{ .Values.service.internalPort }}
             initialDelaySeconds: 10
             periodSeconds: 10
