@@ -22,6 +22,11 @@ healthcheck = HealthCheck(app, "/health")
 hostname = socket.gethostname()
 redis = redis.Redis(os.getenv("REDIS_HOST", "redis"))
 
+def redis_available():
+    redis.info()
+    return True, "redis ok"
+
+healthcheck.add_check(redis_available)
 
 if "DEBUG" in os.environ:
     app.debug = True

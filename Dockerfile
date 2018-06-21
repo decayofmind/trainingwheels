@@ -7,9 +7,9 @@ RUN apk add --no-cache --virtual .build-deps \
     pip install -r /app/requirements.txt && \
     apk del .build-deps
 
-#RUN adduser -S uwsgi
+RUN adduser -S uwsgi
 
-#USER uwsgi
+USER uwsgi
 
 COPY ./src /app
 
