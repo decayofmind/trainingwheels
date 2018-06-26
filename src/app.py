@@ -1,35 +1,47 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from flask import Flask, Response, send_from_directory, render_template
+import socket
+
+from flask import Flask, render_template, send_from_directory
+
+from flask_env import MetaFlaskEnv
+
+from flask_redis_sentinel import SentinelExtension
+
 from healthcheck import HealthCheck
-from prometheus_flask_exporter import PrometheusMetrics
+
 from prometheus_client import multiprocess
 from prometheus_client.core import CollectorRegistry
 
-import os
-import redis
-import socket
+from prometheus_flask_exporter import PrometheusMetrics
+
+
+class Configuration(metaclass=MetaFlaskEnv):
+    DEBUG = False
+    PORT = 5000
 
 
 app = Flask(__name__)
+app.config.from_object(Configuration)
 
 registry = CollectorRegistry()
 multiprocess.MultiProcessCollector(registry, path='/tmp')
-
 metrics = PrometheusMetrics(app, registry=registry)
 healthcheck = HealthCheck(app, "/health")
 
+redis_sentinel = SentinelExtension()
+redis = redis_sentinel.default_connection
+redis_sentinel.init_app(app)
+
 hostname = socket.gethostname()
-redis = redis.Redis(os.getenv("REDIS_HOST", "redis"))
+
 
 def redis_available():
     redis.info()
     return True, "redis ok"
 
-healthcheck.add_check(redis_available)
 
-if "DEBUG" in os.environ:
-    app.debug = True
+healthcheck.add_check(redis_available)
 
 
 @app.errorhandler(500)
@@ -56,6 +68,6 @@ def assets(path):
 
 
 if __name__ == "__main__":
-    app.run(port=os.getenv("APP_PORT", 5000))
+    app.run()
 
 #  vim: set et fenc=utf-8 ft=python sts=4 sw=4 ts=4 tw=79 :
