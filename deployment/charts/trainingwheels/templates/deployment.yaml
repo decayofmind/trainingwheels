@@ -29,7 +29,6 @@ spec:
       labels:
         app: {{ template "trainingwheels.name" . }}
         release: {{ .Release.Name }}
-        role: frontend
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -39,21 +38,18 @@ spec:
             - name: web
               containerPort: {{ .Values.service.internalPort }}
           env:
-            - name: REDIS_HOST
-              value: {{ template "trainingwheels.redis.fullname" . }}
-            - name: APP_PORT
-              value: {{ .Values.service.internalPort | quote }}
+            - name: REDIS_URL
+              value: redis://{{ template "trainingwheels.redis.fullname" . }}-master:6379
           livenessProbe:
             httpGet:
               path: /health
-              #port: {{ .Values.service.internalPort }}
               port: web
             initialDelaySeconds: 10
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health
-              port: {{ .Values.service.internalPort }}
+              port: web
             initialDelaySeconds: 10
             periodSeconds: 10
           resources:

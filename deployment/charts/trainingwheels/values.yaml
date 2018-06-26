@@ -8,9 +8,10 @@ maxSurge: 2
 image:
   repository: decayofmind/trainingwheels
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
+  type: NodePort
   internalPort: 5000
   externalPort: 80
 
@@ -23,6 +24,5 @@ monitoring:
   #requests:
     #memory: 128Mi
 
-redis-cache:
-  antiAffinity: "soft"
-  nameOverride:
+redis:
+  usePassword: false

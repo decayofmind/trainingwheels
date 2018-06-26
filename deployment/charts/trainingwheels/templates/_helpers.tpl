@@ -14,6 +14,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "trainingwheels.redis.fullname" -}}
-{{- $name := default "redis-cache" (index .Values "redis-cache" "nameOverride") -}}
+{{- $name := default "redis" (index .Values "redis" "nameOverride") -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

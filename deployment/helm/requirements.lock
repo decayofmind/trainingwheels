@@ -1,6 +1,0 @@
-dependencies:
-- name: redis-cache
-  repository: https://kubernetes-charts-incubator.storage.googleapis.com/
-  version: 0.3.3
-digest: sha256:6387df380154c64ba3512bfc627a01d6ddf2eb77054479398bcc4809d3a24714
-generated: 2018-06-21T23:23:23.225450708+02:00
