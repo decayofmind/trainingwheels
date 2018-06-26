@@ -2,12 +2,13 @@ version: "2"
 
 services:
   www:
-    build: www
+    build: .
     ports:
       - 5000:5000
-    user: nobody
+    user: uwsgi
     environment:
       DEBUG: 1
+      REDIS_URL: 'redis://redis:6379'
     volumes:
       - ./src:/app
     links:
