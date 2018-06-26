@@ -19,6 +19,7 @@ from prometheus_flask_exporter import PrometheusMetrics
 class Configuration(metaclass=MetaFlaskEnv):
     DEBUG = False
     PORT = 5000
+    APP_VERSION = 'latest'
 
 
 app = Flask(__name__)
@@ -57,9 +58,11 @@ def index():
     counters = [(s.decode(), int(i)) for (s, i) in counters]
     thiscount = int(redis.zscore("counters", hostname))
     totalcount = sum(i for (s, i) in counters)
+    version = app.config.get("APP_VERSION")
     return render_template("index.html",
                            hostname=hostname, counters=counters,
-                           thiscount=thiscount, totalcount=totalcount)
+                           thiscount=thiscount, totalcount=totalcount,
+                           version=version)
 
 
 @app.route("/assets/<path:path>")
